@@ -1,0 +1,25 @@
+services:
+
+  product-service:
+    build: ./product-service
+    # Expose to host for direct debugging only; containers use internal DNS
+    ports:
+      - "8001:8000"
+
+  discount-service:
+    build: ./discount-service
+    # Expose to host for direct debugging only
+    ports:
+      - "8003:8000"
+
+  order-service:
+    build: ./order-service
+    ports:
+      - "8002:8000"
+    environment:
+      # Internal Docker DNS names — NOT host ports
+      PRODUCT_SERVICE_URL: http://product-service:8000
+      DISCOUNT_SERVICE_URL: http://discount-service:8000
+    depends_on:
+      - product-service
+      - discount-service
